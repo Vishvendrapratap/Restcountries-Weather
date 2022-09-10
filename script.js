@@ -1,7 +1,8 @@
 const countriesElem= document.querySelector(".row")
 
+//Function to get all restcounties
 async function getCountry(){
-    const url= await fetch("https://restcountries.com/v2/all");
+    const url= await fetch("https://restcountries.com/v2/all"); //fetching api
     const res = await url.json();
     // console.log(res);
     res.forEach((elem)=>{
@@ -10,6 +11,7 @@ async function getCountry(){
 }
 
 
+//function to sgow coutris in card
 function showCountry(data){
     const div = document.createElement("div")
     div.className="col-lg-4"
@@ -30,6 +32,7 @@ function showCountry(data){
         </div>
     </div>
       `
+    //   Function to get weather
     async function getWeather() {
         let weatherData = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${data.capital}&appid=be575a49fe80911f8e8b8104518729a6`)
         const res = await  weatherData.json()
@@ -48,7 +51,7 @@ function showCountry(data){
         });
     }
     countriesElem.appendChild(div)
-    getWeather()
+    getWeather() //calling function to get weather
 }
 
 getCountry(); 
