@@ -5,14 +5,14 @@ async function getCountry(){
     const url= await fetch("https://restcountries.com/v2/all"); //fetching api
     const res = await url.json();
     // console.log(res);
-    res.forEach((elem)=>{
-        showCountry(elem)
+    res.forEach((elem,index)=>{
+        showCountry(elem,index)
     })
 }
 
 
 //function to sgow coutris in card
-function showCountry(data){
+function showCountry(data,ind){
     const div = document.createElement("div")
     div.className="col-lg-4"
     div.innerHTML = `
@@ -27,8 +27,14 @@ function showCountry(data){
           <p><strong>Capital: </strong> ${data.capital} </p>
           <p><strong>Region: </strong>${data.region}</p>
           <p><strong>Country Code: </strong>${data.alpha3Code} </p>
-          <button id="weather" onClick="getWeather()" class="btn btn-primary">Click for Weather</button>
-          <div id="divtext" class="card-text"></div>
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample${ind}" aria-expanded="false" aria-controls="collapseExample" onclick="weatherData()">
+                Click for Weather
+           </button>
+            <div class="collapse" id="collapseExample${ind}">
+                This is the text where weather data is to be displayed.
+                    <div class="info">
+                 </div>
+              </div>
         </div>
     </div>
       `
@@ -36,22 +42,18 @@ function showCountry(data){
     async function getWeather() {
         let weatherData = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${data.capital}&appid=be575a49fe80911f8e8b8104518729a6`)
         const res = await  weatherData.json()
-        console.log(res);
+        // console.log(res);
 
-        const weather=document.getElementById('weather')
-        weather.addEventListener('click',()=>{
-                
-            var divtext = document.getElementById('divtext')
-                   divtext.innerHTML=`<p class="card-text">Humidity:${res.main.humidity}</p>
+        localStorage['jsonData'] = JSON.stringify(res);
+        const getClass = document.querySelector(`#collapseExample${ind}`);
+        
+        getClass.innerHTML  =`<p class="card-text">Humidity:${res.main.humidity}</p>
                                    <p class="card-text">Temperature:${res.main.temp}</p>
                                    <p class="card-text">Pressure:${res.main.pressure}</p>
                                    <p class="card-text">Visibility:${res.visibility}</p>                                                                
-                                   <button class="btn btn-primary" onclick="divtext.style.display='none'">Close</button>`           
-                  divtext.style.display="block"      
-        });
-    }
-    countriesElem.appendChild(div)
+                                  `           
+                            }
+                    countriesElem.appendChild(div)
     getWeather() //calling function to get weather
 }
-
 getCountry(); 
